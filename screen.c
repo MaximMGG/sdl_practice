@@ -1,7 +1,4 @@
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_error.h>
-#include <SDL2/SDL_surface.h>
-#include <SDL2/SDL_video.h>
 
 #define true 1
 #define false 0

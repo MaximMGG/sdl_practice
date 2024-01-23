@@ -12,3 +12,6 @@ debug: test.c
 
 screen: screen.c
 	$(GCC)
+
+key: keypres.c
+	$(GCC)

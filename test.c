@@ -15,7 +15,7 @@ _Bool init();
 
 _Bool loadMedia();
 
-void close();
+void closed();
 
 SDL_Window *gWindow = NULL;
 
@@ -75,7 +75,7 @@ int main() {
         }
     }
 
-    close();
+    closed();
     return 0;
 }
 
@@ -116,7 +116,7 @@ _Bool loadMedia() {
     return success;
 }
 
-void close() {
+void closed() {
     SDL_FreeSurface(gHelloWorld);
     gHelloWorld = NULL;
 
