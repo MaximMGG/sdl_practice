@@ -16,21 +16,30 @@ typedef struct {
 void init(App *app) { 
     SDL_Init(SDL_INIT_VIDEO);
 
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
+    if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1")) {
+        fprintf(stderr, "Error sdl hint render %s\n", SDL_GetError());
+    };
 
     app->win = SDL_CreateWindow("Image window", 
                                 SDL_WINDOWPOS_UNDEFINED, 
                                 SDL_WINDOWPOS_UNDEFINED, 
                                 SCREEN_WIDTH, SCREEN_HEIGHT,
                                 SDL_WINDOW_SHOWN);
+    if (app->win == NULL) {
+        fprintf(stderr, "Error create window %s\n", SDL_GetError());        
+    } else {
+        app->rend = SDL_CreateRenderer(app->win, -1, SDL_RENDERER_ACCELERATED);
+        if (app->rend == NULL) {
+            fprintf(stderr, "Error create renderer %s\n", SDL_GetError());
+        } else {
+            SDL_SetRenderDrawColor(app->rend, 0xFF, 0xFF, 0xFF, 0xFF);
 
-    app->rend = SDL_CreateRenderer(app->win, -1, SDL_RENDERER_ACCELERATED);
-
-    SDL_SetRenderDrawColor(app->rend, 0xFF, 0xFF, 0xFF, 0xFF);
-
-    int imageFlag = IMG_INIT_PNG;
-
-    IMG_Init(imageFlag);
+            int imageFlag = IMG_INIT_PNG;
+            if (!(IMG_Init(imageFlag) & imageFlag)) {
+                fprintf(stderr, "Init image error %s\n", IMG_GetError());
+            }
+        }
+    }
 
 }
 
@@ -40,12 +49,18 @@ SDL_Texture *load_texture(App *app, char *path) {
 
     SDL_Texture *newTexture = NULL;
     SDL_Surface *loadSurface = IMG_Load(path);
-
-    newTexture = SDL_CreateTextureFromSurface(app->rend, loadSurface);
+    if (loadSurface == NULL) {
+        fprintf(stderr, "Img load error %s\n", IMG_GetError());
+    } else {
+        newTexture = SDL_CreateTextureFromSurface(app->rend, loadSurface);
+        if (newTexture == NULL) {
+            fprintf(stderr, "Create texture from surface error %s\n", SDL_GetError());
+        }
+    }
 
     SDL_FreeSurface(loadSurface);
 
-    return NULL;
+    return newTexture;
 }
 
 void closed(App *app) {
@@ -62,6 +77,9 @@ void closed(App *app) {
 
 void loadMedia(App *app) {
     app->texture = load_texture(app, "texture.png");
+    if (app->texture == NULL) {
+        fprintf(stderr, "load texture error\n");
+    }
 }
 
 
