@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_keycode.h>
 #include <vector>
 
 #define WIDTH 640
@@ -47,6 +48,13 @@ class Screen {
             if (e.type == SDL_QUIT) {
                 SDL_Quit();
                 exit(0);
+            }
+            if (e.type == SDL_KEYDOWN) {
+                switch(e.key.keysym.sym) {
+                    case SDLK_q: 
+                        SDL_Quit();
+                        exit(0);
+                }
             }
         }
     }
