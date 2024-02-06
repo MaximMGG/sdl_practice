@@ -1,58 +1,80 @@
 #include <SDL2/SDL.h>
 #include <cmath>
 
-#define RAD 200 
 #define WIDTH 1000
 #define HEIGHT 800
 #define START_X 500
 #define START_Y 400
-#define PI 3.14
 #define RADIAN(x) x * PI/180
 
-
-void draw_circle(SDL_Renderer *rend, SDL_Texture *black) {
-    for(float i = 0.00; i < 360.0; i+=0.02) {
-        float x = cos(RADIAN(i));
-        float y = sin(RADIAN(i));
-        SDL_RenderDrawPointF(rend, START_X + RAD * x, START_Y + RAD * y);
-        SDL_RenderPresent(rend);
-        SDL_Delay(50);
-        SDL_RenderClear(rend);
-    }
-}
+constexpr uint8_t R = 255;
+constexpr uint8_t G = 0;
+constexpr uint8_t B = 0;
+const double PI = 3.14159265358979323846;
+const double GOLDEN_RATION = (1 + std::sqrt(5)) / 2;
+double RAD = 200;
 
 
 int main() {
     SDL_Window *win;
     SDL_Renderer *rend;
+    SDL_Surface *sur;
     SDL_Init(SDL_INIT_VIDEO);
     win = SDL_CreateWindow("Circle", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, 0);
-    rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
-    SDL_Texture *black = SDL_CreateTexture(rend, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, WIDTH, HEIGHT);
+    sur = SDL_GetWindowSurface(win);
 
-    
-    SDL_SetRenderTarget(rend, black);
-    SDL_SetRenderDrawColor(rend, 0x00, 0x00, 0x00, 0xFF);
-    SDL_RenderClear(rend);
-    SDL_SetRenderTarget(rend, nullptr);
-
-
-    draw_circle(rend, black);
-    SDL_RenderPresent(rend);
+    // SDL_UpdateWindowSurface(win);
 
     int quit = 1;
     SDL_Event e;
+    float first_circle_i = 0.0;
+    float second_circle_i = 0.0;
+    float first_x;
+    float first_y;
+    float c_x;
+    float c_y;
+    float fci_iterator = 0.2;
+    double angleIncrement = 2 * PI / GOLDEN_RATION;
+
     while(quit) {
         while(SDL_PollEvent(&e)) {
             if (e.key.keysym.sym == SDLK_q) {
                 quit = 0;
             }
         }
+
+        c_x = cos(RADIAN(first_circle_i));
+        c_y = sin(RADIAN(first_circle_i));
+        first_circle_i += fci_iterator;
+        // if (first_circle_i >= 360.0) {
+        //     first_circle_i = 0.0;
+        // }
+
+        first_x = START_X + RAD * c_x;
+        first_y = START_Y + RAD * c_y;
+
+        for(int i = 0; i < 3; i++) {
+            float angle = second_circle_i * angleIncrement;
+            c_x = cos(RADIAN(angle));
+            c_y = sin(RADIAN(angle));
+            int xx = first_x + RAD * c_x;
+            int yy = first_y + RAD * c_y;
+            second_circle_i += 0.1;
+            // if (second_circle_i >= 360.0) second_circle_i = 0.0;
+
+            SDL_LockSurface(sur);
+            uint8_t *buf = (uint8_t *) sur->pixels;
+            buf[yy * sur->pitch + xx * sur->format->BytesPerPixel - 2] = R;
+            buf[yy * sur->pitch + xx * sur->format->BytesPerPixel - 1] = G;
+            buf[yy * sur->pitch + xx * sur->format->BytesPerPixel] = B;
+            SDL_UnlockSurface(sur);
+            SDL_Delay(3);
+            SDL_UpdateWindowSurface(win);
+        }
     }
 
-    SDL_DestroyRenderer(rend);
+    SDL_FreeSurface(sur);
     SDL_DestroyWindow(win);
-
     SDL_Quit();
 
     return 0;
