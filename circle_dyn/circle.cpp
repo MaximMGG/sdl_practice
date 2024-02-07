@@ -1,18 +1,20 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_surface.h>
+#include <SDL2/SDL_timer.h>
 #include <cmath>
 
-#define WIDTH 1000
-#define HEIGHT 800
-#define START_X 500
-#define START_Y 400
+#define WIDTH 800 
+#define HEIGHT 600
+#define START_X 400
+#define START_Y 300
 #define RADIAN(x) x * PI/180
 
 constexpr uint8_t R = 255;
-constexpr uint8_t G = 0;
-constexpr uint8_t B = 0;
+constexpr uint8_t G = 255;
+constexpr uint8_t B = 255;
 const double PI = 3.14159265358979323846;
 const double GOLDEN_RATION = (1 + std::sqrt(5)) / 2;
-double RAD = 200;
+double RAD = 120;
 
 
 int main() {
@@ -53,7 +55,7 @@ int main() {
         first_x = START_X + RAD * c_x;
         first_y = START_Y + RAD * c_y;
 
-        for(int i = 0; i < 3; i++) {
+        for(int i = 0; i < 1; i++) {
             float angle = second_circle_i * angleIncrement;
             c_x = cos(RADIAN(angle));
             c_y = sin(RADIAN(angle));
@@ -64,9 +66,9 @@ int main() {
 
             SDL_LockSurface(sur);
             uint8_t *buf = (uint8_t *) sur->pixels;
-            buf[yy * sur->pitch + xx * sur->format->BytesPerPixel - 2] = R;
-            buf[yy * sur->pitch + xx * sur->format->BytesPerPixel - 1] = G;
-            buf[yy * sur->pitch + xx * sur->format->BytesPerPixel] = B;
+            buf[yy * sur->pitch + xx * sur->format->BytesPerPixel] = R;
+            buf[yy * sur->pitch + xx * sur->format->BytesPerPixel + 1] = G;
+            buf[yy * sur->pitch + xx * sur->format->BytesPerPixel + 2] = B;
             SDL_UnlockSurface(sur);
             SDL_Delay(3);
             SDL_UpdateWindowSurface(win);
