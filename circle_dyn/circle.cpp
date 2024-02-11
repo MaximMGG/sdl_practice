@@ -35,7 +35,7 @@ int main() {
     float first_y;
     float c_x;
     float c_y;
-    float fci_iterator = 0.2;
+    float fci_iterator = 0.1;
     double angleIncrement = 2 * PI / GOLDEN_RATION;
 
     while(quit) {
@@ -55,7 +55,7 @@ int main() {
         first_x = START_X + RAD * c_x;
         first_y = START_Y + RAD * c_y;
 
-        for(int i = 0; i < 1; i++) {
+        for(int i = 0; i < 2; i++) {
             float angle = second_circle_i * angleIncrement;
             c_x = cos(RADIAN(angle));
             c_y = sin(RADIAN(angle));

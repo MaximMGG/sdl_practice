@@ -67,7 +67,10 @@ int main() {
         SDL_RenderFillRect(app->rend, &fillRect);
 
 
-        SDL_Rect outlineRect = {WIDTH / 6, HEIGHT / 6, WIDTH * 2 / 3, HEIGHT * 2 / 3};
+        // SDL_Rect outlineRect = {WIDTH / 6, HEIGHT / 6, WIDTH * 2 / 3, HEIGHT * 2 / 3};
+        int distx = WIDTH / 6;
+        int disty = HEIGHT / 6;
+        SDL_Rect outlineRect = {distx, disty, WIDTH - distx * 2, HEIGHT - disty * 2};
         SDL_SetRenderDrawColor(app->rend, 0x00, 0xFF, 0x00, 0xFF);
         SDL_RenderDrawRect(app->rend, &outlineRect);
 
@@ -80,7 +83,22 @@ int main() {
         SDL_RenderDrawLine(app->rend, 0, HEIGHT, WIDTH, 0);
         //diagonal 2
         SDL_SetRenderDrawColor(app->rend, 0x44, 0xAA, 0x00, 0xFF);
-        SDL_RenderDrawLine(app->rend, 0, 0, WIDTH, HEIGHT);
+        int x = 0, y = 5;
+        int xx = WIDTH - 5, yy = HEIGHT;
+        for(int i = 0; i < 10; i++) {
+            SDL_RenderDrawLine(app->rend, x, y, xx, yy);
+            if (y > 0) {
+                y--;
+            } else {
+                x++;
+            }
+            if (xx < WIDTH) {
+                xx++;
+            } else {
+                yy--;
+            }
+
+        }
 
         SDL_SetRenderDrawColor(app->rend, 0xFF, 0xFF, 0x00, 0xFF);
         for(int i = 0; i < HEIGHT; i += 4) {
