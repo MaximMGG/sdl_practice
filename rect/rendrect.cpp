@@ -11,8 +11,11 @@ int main() {
 
     win = SDL_CreateWindow("Draw ract", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
     SDL_Renderer *render = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
-    SDL_Rect rect {100, 100, 600, 600};
-    SDL_Surface *sur = SDL_LoadBMP("./sample.bmp");
+    SDL_Rect rect {100, 100, 150, 150};
+    SDL_Surface *sur = SDL_LoadBMP("./ft.bmp");
+    if (sur == NULL) {
+        perror("Sur error");
+    }
     SDL_Texture *tex = SDL_CreateTextureFromSurface(render, sur);
     SDL_FreeSurface(sur);
 
@@ -29,7 +32,7 @@ int main() {
             }
         }
 
-        SDL_SetRenderDrawColor(render, 0x00, 0x00, 0x00, 0xFF);
+        SDL_SetRenderDrawColor(render, 0x00, 0x00, 0xFF, 0xFF);
         SDL_RenderClear(render);
         SDL_SetRenderDrawColor(render, 0xFF, 0xFF, 0xFF, 0xFF);
         // SDL_RenderDrawLine(render, 0, 5, WIDTH, 5);
