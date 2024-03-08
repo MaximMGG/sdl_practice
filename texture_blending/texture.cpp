@@ -27,10 +27,12 @@ int main() {
     SDL_FreeSurface(sur);
 
     SDL_Rect rect {.x = 50, .y = 100, .w = 200, .h = 200};
+    SDL_Rect rect2 {.x = 250, .y = 300, .w = 200, .h = 200};
 
     bool run =true;
 
     SDL_Event e;
+    int x = 0, y = 0;
     while(run) {
 
         // while(SDL_HasEvent(!SDL_QUIT)) {
@@ -43,6 +45,11 @@ int main() {
             if (e.type == SDL_QUIT) {
                 run = false;
             }
+            if (e.type == SDL_MOUSEMOTION) {
+                SDL_GetMouseState(&x, &y);
+                rect2.x = e.motion.x;
+                rect2.y = e.motion.y;
+            }
         }
 
         SDL_SetRenderDrawColor(rend, 0, 0, 0xFF, SDL_ALPHA_OPAQUE);
@@ -52,6 +59,7 @@ int main() {
         SDL_RenderDrawLine(rend, 5, 5, 200, 200);
 
         SDL_RenderCopy(rend, tex, NULL, &rect);
+        SDL_RenderCopy(rend, tex, NULL, &rect2);
 
 
         SDL_RenderPresent(rend);
