@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
+#include <string>
 
 
 #define PRINT_ERR std::cout << __LINE__ << " error " << SDL_GetError() << std::endl;     
