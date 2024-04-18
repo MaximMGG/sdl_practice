@@ -36,12 +36,21 @@ void do_gravity(List *send) {
 void draw_send(SDL_Window *win, SDL_Renderer *rend, List *send) {
 
     SDL_SetRenderDrawColor(rend, 0xFF, 0xFF, 0xFF, 0xFF);
-    SDL_RenderClear(rend);
     for(int i = 0; i < send->len; i++) {
         struct point *temp = (struct point *) list_get(send, i);
         SDL_RenderDrawPoint(rend, temp->x, temp->y);
     }
     SDL_RenderPresent(rend);
+}
+
+
+void free_list(List *l) {
+    for(int i = 0; i < l->len; i++) {
+        struct point *t = (struct point *)list_get(l, i);
+        free(t);
+    }
+
+    list_free_all(l);
 }
 
 
@@ -57,18 +66,31 @@ int main() {
 
     SDL_Event e;
     int run = 1;
+    int mx = 0;
+    int my = 0;
+
 
     while(run) {
         while (SDL_PollEvent(&e)) {
             if (e.type == SDL_QUIT) {
                 run = 0;
             }
+
+            if (e.type == SDL_MOUSEBUTTONDOWN) {
+                SDL_GetMouseState(&mx, &my);
+                if (mx <= WIDTH && my <= HEIGHT) {
+                    list_add(l, create_point(mx, my));
+                }
+            }
         }
+        do_gravity(l);
+        draw_send(win, rend, l);
+        SDL_SetRenderDrawColor(rend, 0x00, 0x00, 0x00, 0xFF);
+        SDL_RenderClear(rend);
     }
 
-
-
-
+    SDL_DestroyRenderer(rend);
+    SDL_DestroyWindow(win);
 
     return 0;
 }
